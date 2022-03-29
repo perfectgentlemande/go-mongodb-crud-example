@@ -3,10 +3,10 @@ Example of REST API. Includes such things as MongoDB, Zap logger, chi router etc
 
 ## Generate
 
-API boilerplate code is generated using `oapi-codegen` tool from the `openapi.yaml` file. See `api.go`.  
-It's great tool that makes your actual API reflect the documentation.
+API boilerplate code is generated using `oapi-codegen` tool from the `openapi.yaml` file.  
+It's great tool that makes your actual API reflect the documentation. See `api.go`.  
 
-Get it here:
+Get it there:
 `https://github.com/deepmap/oapi-codegen`
 
 And make sure that your `GOPATH/bin` path presents in `PATH` variable.
