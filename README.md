@@ -12,5 +12,5 @@ Get it here:
 
 And make sure that your `GOPATH/bin` path presents in `PATH` variable.
 
-Use this command to generate the `api.go` file:
+Use this command to generate the `api.go` file:  
 `oapi-codegen --generate=types,chi-server openapi/openapi.yaml > internal/api/api.go`
