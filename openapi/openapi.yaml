@@ -1,0 +1,171 @@
+openapi: "3.0.0"
+info:
+  version: 0.1.0
+  title: go-mongodb-crud-example
+  description: Example of REST API. Includes such things as MongoDB, Zap logger, chi router etc... Some kind of a sample project API for educational purposes.
+  contact:
+    name: Artem Chaadaev
+    url: https://github.com/perfectgentlemande/go-mongodb-crud-example
+tags:
+  - name: user
+    description: "Operations with users"    
+paths:
+  /user:
+    get:
+      description: "List users"
+      tags:
+        - user
+      responses:
+        "200":
+          description: "List of users"
+          content:
+            "application/json":
+              schema:
+                type: array
+                items: 
+                  "$ref": "#/components/schemas/User"
+        default:
+          description: "Unexpected error"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/APIError"
+    post:
+      description: "Create user"   
+      tags:
+        - user
+      responses:
+        "200":
+          description: "Created user"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/CreatedItem"
+        default:
+          description: "Unexpected error"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/APIError"
+  /user/{id}:
+    get:
+      description: "Get user by ID"  
+      tags:
+        - user
+      parameters:
+        - name: id
+          in: path
+          description: selected ID of user
+          required: true
+          schema:
+            type: string
+            format: uuid  
+      responses:
+        "200":
+          description: "Selected user"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/User"
+        default:
+          description: "Unexpected error"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/APIError"
+    put:
+      description: "Update user by ID"  
+      tags:
+        - user
+      parameters:
+        - name: id
+          in: path
+          description: selected ID of user
+          required: true
+          schema:
+            type: string
+            format: uuid  
+      responses:
+        "200":
+          description: "Updated user"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/User"
+        default:
+          description: "Unexpected error"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/APIError"
+    delete:
+      description: "Delete user by ID"
+      tags:
+        - user
+      parameters:
+        - name: id
+          in: path
+          description: selected ID of user
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: "Deleted user"
+          content:
+            "application/json":
+              schema:
+        default:
+          description: "Unexpected error"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/APIError"
+
+components:
+  schemas:
+    APIError:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          description: "Error message"
+    CreatedItem:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: "New ID of created object"  
+    User:
+      type: object
+      required:
+        - id
+        - username
+        - email
+        - created_at
+        - updated_at
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: "ID of user"  
+        username:
+          type: string
+          description: "Username"  
+        email:
+          type: string
+          description: "Email of user" 
+        created_at:
+          type: string
+          format: date-time
+          description: "Date of user creation"  
+        updated_at:
+          type: string
+          format: date-time
+          description: "Date of user update"  
