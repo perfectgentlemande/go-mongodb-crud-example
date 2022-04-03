@@ -1,0 +1,3 @@
+server:
+  addr: ":8080"
+  prefix: ""

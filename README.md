@@ -1,5 +1,9 @@
 # go-mongodb-crud-example
-Example of REST API. Includes such things as MongoDB, Zap logger, chi router etc...
+Example of REST API.  
+Includes:  
+- oapi-codegen
+- go-chi
+- MongoDB, Zap logger, etc...
 
 ## Generate
 
@@ -12,4 +16,4 @@ Get it there:
 And make sure that your `GOPATH/bin` path presents in `PATH` variable.
 
 Use this command to generate the `api.go` file:  
-`oapi-codegen --generate=types,chi-server openapi/openapi.yaml > internal/api/api.go`
+`oapi-codegen --package=api --generate=types,chi-server openapi/openapi.yaml > internal/api/api.go`
