@@ -11,6 +11,8 @@ import (
 	"syscall"
 
 	"github.com/perfectgentlemande/go-mongodb-crud-example/internal/api"
+	"github.com/perfectgentlemande/go-mongodb-crud-example/internal/database/dbuser"
+	"github.com/perfectgentlemande/go-mongodb-crud-example/internal/service"
 	"golang.org/x/sync/errgroup"
 )
 
@@ -31,8 +33,21 @@ func main() {
 		log.Fatalf("failed to read config: %v", err)
 	}
 
+	dbUser, err := dbuser.NewDatabase(ctx, conf.DBUser)
+	if err != nil {
+		log.Fatalf("cannot create db: %v", err)
+	}
+
+	defer dbUser.Close(ctx)
+
+	err = dbUser.Ping(ctx)
+	if err != nil {
+		log.Fatalf("cannot ping db: %v", err)
+	}
+
 	serverParams := api.ServerParams{
-		Cfg: conf.Server,
+		Cfg:  conf.Server,
+		Srvc: service.NewService(dbUser),
 	}
 	srv := api.NewServer(&serverParams)
 

@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/perfectgentlemande/go-mongodb-crud-example/internal/service"
 )
 
 type Config struct {
@@ -12,17 +13,24 @@ type Config struct {
 	Prefix string `yaml:"prefix"`
 }
 type ServerParams struct {
-	Cfg *Config
+	Cfg  *Config
+	Srvc *service.Service
 }
 
-type Controller struct{}
+type Controller struct {
+	ServerInterface
 
-func NewController() *Controller {
-	return &Controller{}
+	srvc *service.Service
+}
+
+func NewController(srvc *service.Service) *Controller {
+	return &Controller{
+		srvc: srvc,
+	}
 }
 
 func NewServer(params *ServerParams) *http.Server {
-	ctrl := NewController()
+	ctrl := NewController(params.Srvc)
 
 	router := chi.NewRouter()
 	router.Use(NewLoggingMiddleware())

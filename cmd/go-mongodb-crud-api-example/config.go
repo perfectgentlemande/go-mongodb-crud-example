@@ -5,11 +5,13 @@ import (
 	"os"
 
 	"github.com/perfectgentlemande/go-mongodb-crud-example/internal/api"
+	"github.com/perfectgentlemande/go-mongodb-crud-example/internal/database/dbuser"
 	"gopkg.in/yaml.v3"
 )
 
 type Config struct {
-	Server *api.Config `yaml:"server"`
+	DBUser *dbuser.Config `yaml:"dbuser"`
+	Server *api.Config    `yaml:"server"`
 }
 
 func readConfig(fileName string) (*Config, error) {

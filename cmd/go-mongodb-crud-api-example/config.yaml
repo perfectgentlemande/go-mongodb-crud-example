@@ -1,3 +1,6 @@
 server:
   addr: ":80"
   prefix: ""
+dbuser:
+  dbname:
+	connstr:

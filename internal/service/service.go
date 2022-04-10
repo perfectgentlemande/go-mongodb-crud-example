@@ -18,6 +18,11 @@ type User struct {
 type Service struct {
 	userStorage UserStorage
 }
+
+func NewService(userStorage UserStorage) *Service {
+	return &Service{userStorage: userStorage}
+}
+
 type ListUsersParams struct {
 	Limit  *uint64
 	Offset *uint64
