@@ -78,21 +78,15 @@ func (d *Database) GetUserByID(ctx context.Context, id string) (service.User, er
 
 	return usr.ToSevice(), nil
 }
-func (d *Database) UpdateUserByID(ctx context.Context, id string, user *service.User) error {
-	// be careful: this way does not unset the old fields (this is actually closer to PATCH request implementation)
-	// if you want full-document upload implementation, check docs for MongoDB
-	// and probably you should get the existing document on the service layer first
-	// to guarantee the full-document upload (keep data like created_at) without knowing how any DB does the update
+func (d *Database) UpdateUserByID(ctx context.Context, id string, user *service.User) (service.User, error) {
+	usr := userFromSevice(user)
 
-	_, err := d.userCollection.UpdateOne(ctx,
-		bson.M{"_id": id},
-		bson.M{"&set": userFromSevice(user)})
-
+	_, err := d.userCollection.UpdateOne(ctx, bson.M{"_id": id}, usr)
 	if err != nil {
-		return fmt.Errorf("cannot update user: %w", err)
+		return service.User{}, fmt.Errorf("cannot update user: %w", err)
 	}
 
-	return nil
+	return *user, nil
 }
 func (d *Database) DeleteUserByID(ctx context.Context, id string) error {
 	_, err := d.userCollection.DeleteOne(ctx, bson.M{"_id": id})

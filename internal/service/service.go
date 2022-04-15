@@ -42,7 +42,7 @@ func (s *Service) CreateUser(ctx context.Context, user *User) (string, error) {
 func (s *Service) GetUserByID(ctx context.Context, id string) (User, error) {
 	return s.userStorage.GetUserByID(ctx, id)
 }
-func (s *Service) UpdateUserByID(ctx context.Context, id string, user *User) error {
+func (s *Service) UpdateUserByID(ctx context.Context, id string, user *User) (User, error) {
 	user.UpdatedAt = time.Now()
 
 	return s.userStorage.UpdateUserByID(ctx, id, user)

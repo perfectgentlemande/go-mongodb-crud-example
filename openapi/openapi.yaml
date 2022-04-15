@@ -12,9 +12,24 @@ tags:
 paths:
   /user:
     get:
-      description: "List users"
+      description: "List of all users"
       tags:
         - user
+      parameters:
+        - name: limit
+          in: query
+          description: "Maximum number of users to return"
+          required: false
+          schema:
+            type: integer
+            format: int64
+        - name: offset
+          in: query
+          description: "Number of users to skip"
+          required: false
+          schema:
+            type: integer
+            format: int64
       responses:
         "200":
           description: "List of users"
@@ -112,17 +127,17 @@ paths:
             format: uuid
       responses:
         "200":
-          description: "Deleted user"
+          description: "Created user"
           content:
             "application/json":
               schema:
+                $ref: "#/components/schemas/CreatedItem"
         default:
           description: "Unexpected error"
           content:
             "application/json":
               schema:
                 $ref: "#/components/schemas/APIError"
-
 components:
   schemas:
     APIError:

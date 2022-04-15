@@ -1,11 +1,15 @@
 package api
 
 import (
+	"context"
 	"encoding/json"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/perfectgentlemande/go-mongodb-crud-example/internal/logger"
 	"github.com/perfectgentlemande/go-mongodb-crud-example/internal/service"
+	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
 )
 
 type Config struct {
@@ -14,6 +18,7 @@ type Config struct {
 }
 type ServerParams struct {
 	Cfg  *Config
+	Log  *zap.Logger
 	Srvc *service.Service
 }
 
@@ -33,7 +38,7 @@ func NewServer(params *ServerParams) *http.Server {
 	ctrl := NewController(params.Srvc)
 
 	router := chi.NewRouter()
-	router.Use(NewLoggingMiddleware())
+	router.Use(logger.NewLoggingMiddleware(params.Log))
 	apiRouter := chi.NewRouter()
 	HandlerFromMux(ctrl, apiRouter)
 
@@ -50,22 +55,32 @@ func NewServer(params *ServerParams) *http.Server {
 	}
 }
 
-func NewLoggingMiddleware() func(http.Handler) http.Handler {
-	return func(handler http.Handler) http.Handler {
-		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
-			handler.ServeHTTP(w, r)
-		})
-	}
-}
 func RespondWithJSON(w http.ResponseWriter, status int, payload interface{}) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
 	return json.NewEncoder(w).Encode(payload)
 }
-func WriteError() {
+func WriteError(ctx context.Context, w http.ResponseWriter, status int, message string) {
+	log := logger.GetLogger(ctx)
 
+	err := RespondWithJSON(w, status, APIError{Message: message})
+	if err != nil {
+		log.Error("write response", zap.Field{
+			Key:       logger.ErrorField,
+			Type:      zapcore.ErrorType,
+			Interface: err,
+		})
+	}
 }
-func WriteSuccessful() {
+func WriteSuccessful(ctx context.Context, w http.ResponseWriter, payload interface{}) {
+	log := logger.GetLogger(ctx)
 
+	err := RespondWithJSON(w, http.StatusOK, payload)
+	if err != nil {
+		log.Error("write response", zap.Field{
+			Key:       logger.ErrorField,
+			Type:      zapcore.ErrorType,
+			Interface: err,
+		})
+	}
 }

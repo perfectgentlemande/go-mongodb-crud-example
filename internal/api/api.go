@@ -42,11 +42,20 @@ type User struct {
 	Username string `json:"username"`
 }
 
+// GetUserParams defines parameters for GetUser.
+type GetUserParams struct {
+	// Maximum number of users to return
+	Limit *int64 `json:"limit,omitempty"`
+
+	// Number of users to skip
+	Offset *int64 `json:"offset,omitempty"`
+}
+
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
 
 	// (GET /user)
-	GetUser(w http.ResponseWriter, r *http.Request)
+	GetUser(w http.ResponseWriter, r *http.Request, params GetUserParams)
 
 	// (POST /user)
 	PostUser(w http.ResponseWriter, r *http.Request)
@@ -74,8 +83,35 @@ type MiddlewareFunc func(http.HandlerFunc) http.HandlerFunc
 func (siw *ServerInterfaceWrapper) GetUser(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
+	var err error
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params GetUserParams
+
+	// ------------- Optional query parameter "limit" -------------
+	if paramValue := r.URL.Query().Get("limit"); paramValue != "" {
+
+	}
+
+	err = runtime.BindQueryParameter("form", true, false, "limit", r.URL.Query(), &params.Limit)
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "limit", Err: err})
+		return
+	}
+
+	// ------------- Optional query parameter "offset" -------------
+	if paramValue := r.URL.Query().Get("offset"); paramValue != "" {
+
+	}
+
+	err = runtime.BindQueryParameter("form", true, false, "offset", r.URL.Query(), &params.Offset)
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "offset", Err: err})
+		return
+	}
+
 	var handler = func(w http.ResponseWriter, r *http.Request) {
-		siw.Handler.GetUser(w, r)
+		siw.Handler.GetUser(w, r, params)
 	}
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -309,3 +345,4 @@ func HandlerWithOptions(si ServerInterface, options ChiServerOptions) http.Handl
 
 	return r
 }
+
