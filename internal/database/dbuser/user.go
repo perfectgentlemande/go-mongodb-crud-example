@@ -7,6 +7,7 @@ import (
 
 	"github.com/perfectgentlemande/go-mongodb-crud-example/internal/service"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type User struct {
@@ -45,10 +46,23 @@ func (d *Database) CreateUser(ctx context.Context, user *service.User) (string, 
 
 	return user.ID, nil
 }
-func (d *Database) ListUsers(ctx context.Context, params *service.ListUsersParams) ([]service.User, error) {
-	// TODO add options
 
-	cur, err := d.userCollection.Find(ctx, bson.M{})
+func withListUsersParams(opts *options.FindOptions, params *service.ListUsersParams) *options.FindOptions {
+	if params.Limit != nil {
+		opts = opts.SetLimit(*params.Limit)
+	}
+	if params.Offset != nil {
+		opts = opts.SetSkip(*params.Offset)
+	}
+
+	return opts
+}
+
+func (d *Database) ListUsers(ctx context.Context, params *service.ListUsersParams) ([]service.User, error) {
+	opts := options.Find()
+	opts = withListUsersParams(opts, params)
+
+	cur, err := d.userCollection.Find(ctx, bson.M{}, opts)
 	if err != nil {
 		return nil, fmt.Errorf("cannot find users: %w", err)
 	}

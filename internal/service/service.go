@@ -24,8 +24,8 @@ func NewService(userStorage UserStorage) *Service {
 }
 
 type ListUsersParams struct {
-	Limit  *uint64
-	Offset *uint64
+	Limit  *int64
+	Offset *int64
 }
 
 func (s *Service) ListUsers(ctx context.Context, params *ListUsersParams) ([]User, error) {
