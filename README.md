@@ -49,3 +49,7 @@ Build the app image and run:
 `docker run -it -p 8080:80 --name go-mongodb-app-0 --network db_network go-mongodb-app:v0.1.0`
 
 ### Running via Docker Compose
+
+As simple as:
+`docker-compose build`
+`docker-compose up`
