@@ -8,4 +8,5 @@ RUN GOOS=linux GOARCH=amd64 go build -o go-mongodb-app ./cmd/go-mongodb-crud-api
 FROM alpine:3.15 AS app
 WORKDIR /app
 COPY --from=builder /app/go-mongodb-app /app
+COPY --from=builder /app/cmd/go-mongodb-crud-api-example/config.yaml /app
 CMD ["./go-mongodb-app"]
