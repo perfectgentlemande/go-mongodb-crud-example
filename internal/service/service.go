@@ -43,6 +43,7 @@ func (s *Service) GetUserByID(ctx context.Context, id string) (User, error) {
 	return s.userStorage.GetUserByID(ctx, id)
 }
 func (s *Service) UpdateUserByID(ctx context.Context, id string, user *User) (User, error) {
+	user.ID = id
 	user.UpdatedAt = time.Now()
 
 	return s.userStorage.UpdateUserByID(ctx, id, user)

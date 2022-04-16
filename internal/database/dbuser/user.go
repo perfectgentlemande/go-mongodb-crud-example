@@ -95,7 +95,7 @@ func (d *Database) GetUserByID(ctx context.Context, id string) (service.User, er
 func (d *Database) UpdateUserByID(ctx context.Context, id string, user *service.User) (service.User, error) {
 	usr := userFromSevice(user)
 
-	_, err := d.userCollection.UpdateOne(ctx, bson.M{"_id": id}, usr)
+	_, err := d.userCollection.UpdateOne(ctx, bson.M{"_id": id}, bson.M{"$set": usr})
 	if err != nil {
 		return service.User{}, fmt.Errorf("cannot update user: %w", err)
 	}
