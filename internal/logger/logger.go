@@ -12,6 +12,7 @@ import (
 const ErrorField = "error"
 
 type loggerCtxKey struct{}
+type Logger zap.Logger
 
 func DefaultLogger() *zap.Logger {
 	return zap.New(
@@ -28,6 +29,7 @@ func GetLogger(ctx context.Context) *zap.Logger {
 	}
 	return le
 }
+
 func NewLoggingMiddleware(log *zap.Logger) func(http.Handler) http.Handler {
 	return func(handler http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

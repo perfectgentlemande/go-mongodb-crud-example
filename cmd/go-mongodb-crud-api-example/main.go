@@ -5,14 +5,16 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-	"log"
 	"net/http"
 	"os/signal"
 	"syscall"
 
 	"github.com/perfectgentlemande/go-mongodb-crud-example/internal/api"
 	"github.com/perfectgentlemande/go-mongodb-crud-example/internal/database/dbuser"
+	"github.com/perfectgentlemande/go-mongodb-crud-example/internal/logger"
 	"github.com/perfectgentlemande/go-mongodb-crud-example/internal/service"
+	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
 	"golang.org/x/sync/errgroup"
 )
 
@@ -24,36 +26,62 @@ func main() {
 		syscall.SIGTERM,
 		syscall.SIGQUIT)
 	defer cancel()
+	log := logger.DefaultLogger()
 
 	configPath := flag.String("c", "config.yaml", "path to your config")
 	flag.Parse()
 
 	conf, err := readConfig(*configPath)
 	if err != nil {
-		log.Fatalf("failed to read config: %v", err)
+		log.Fatal("failed to read config", zap.Field{
+			Key:       logger.ErrorField,
+			Type:      zapcore.ErrorType,
+			Interface: err,
+		}, zapcore.Field{
+			Key:    "config_path",
+			Type:   zapcore.StringType,
+			String: *configPath,
+		})
 	}
 
 	dbUser, err := dbuser.NewDatabase(ctx, conf.DBUser)
 	if err != nil {
-		log.Fatalf("cannot create db: %v", err)
+		log.Fatal("cannot create db", zap.Field{
+			Key:       logger.ErrorField,
+			Type:      zapcore.ErrorType,
+			Interface: err,
+		})
 	}
 
 	defer dbUser.Close(ctx)
 
 	err = dbUser.Ping(ctx)
 	if err != nil {
-		log.Fatalf("cannot ping db: %v", err)
+		log.Fatal("cannot ping db", zap.Field{
+			Key:       logger.ErrorField,
+			Type:      zapcore.ErrorType,
+			Interface: err,
+		}, zapcore.Field{
+			Key:    "conn_string",
+			Type:   zapcore.StringType,
+			String: conf.DBUser.ConnStr,
+		})
 	}
 
 	serverParams := api.ServerParams{
 		Cfg:  conf.Server,
 		Srvc: service.NewService(dbUser),
+		Log:  log,
 	}
 	srv := api.NewServer(&serverParams)
 
 	rungroup, ctx := errgroup.WithContext(ctx)
 
-	log.Printf("starting server on address: %s", srv.Addr)
+	log.Info("starting server", zap.Field{
+		Key:    "address",
+		Type:   zapcore.ErrorType,
+		String: srv.Addr,
+	})
 	rungroup.Go(func() error {
 		if er := srv.ListenAndServe(); er != nil && !errors.Is(er, http.ErrServerClosed) {
 			return fmt.Errorf("listen and server %w", er)
@@ -74,9 +102,13 @@ func main() {
 
 	err = rungroup.Wait()
 	if err != nil {
-		log.Printf("run group exited because of error: %v", err)
+		log.Error("run group exited because of error", zap.Field{
+			Key:       logger.ErrorField,
+			Type:      zapcore.ErrorType,
+			Interface: err,
+		})
 		return
 	}
 
-	log.Println("Server Exited Properly")
+	log.Info("server exited properly")
 }
