@@ -12,7 +12,6 @@ import (
 const ErrorField = "error"
 
 type loggerCtxKey struct{}
-type Logger zap.Logger
 
 func DefaultLogger() *zap.Logger {
 	return zap.New(

@@ -79,7 +79,7 @@ func main() {
 
 	log.Info("starting server", zap.Field{
 		Key:    "address",
-		Type:   zapcore.ErrorType,
+		Type:   zapcore.StringType,
 		String: srv.Addr,
 	})
 	rungroup.Go(func() error {
