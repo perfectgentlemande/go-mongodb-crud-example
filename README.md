@@ -7,7 +7,7 @@ Includes:
 - Zap logger;  
 - MongoDB;  
 - Docker;
-- Docker Compose;
+- Docker Compose.
 
 ## Description
 
