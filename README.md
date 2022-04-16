@@ -1,9 +1,13 @@
 # go-mongodb-crud-example
 Example of REST API.  
-Includes:  
-- oapi-codegen
-- go-chi
-- MongoDB, Zap logger, etc...
+
+Includes:    
+- oapi-codegen;  
+- go-chi;  
+- Zap logger;  
+- MongoDB;  
+- Docker;
+- Docker Compose;
 
 ## Description
 
@@ -36,20 +40,20 @@ Use `go run .` from the folder that contains `main.go`.
 Get the image here:  
 `https://hub.docker.com/_/mongo`  
 
-Create network and volume:  
-`docker network create db_network`  
-`docker volume create mongo-vol`  
+Create network and volume:   
+- `docker network create db_network`  
+- `docker volume create mongo-vol`  
 
 Run db container:  
-`docker run -it --rm -p 27017:27017 --name mongodb-0 --network db_network --mount source=mongo-vol,target=/var/lib/docker/volumes/mongo-vol/_data mongo:5.0.6`  
+- `docker run -it --rm -p 27017:27017 --name mongodb-0 --network db_network --mount source=mongo-vol,target=/var/lib/docker/volumes/mongo-vol/_data mongo:5.0.6`  
 After that you can run your using `go run` if you need.
 
 Build the app image and run:  
-`docker build -t go-mongodb-app:v0.1.0 .`  
-`docker run -it -p 8080:80 --name go-mongodb-app-0 --network db_network go-mongodb-app:v0.1.0`
+- `docker build -t go-mongodb-app:v0.1.0 .`  
+- `docker run -it -p 8080:80 --name go-mongodb-app-0 --network db_network go-mongodb-app:v0.1.0`  
 
 ### Running via Docker Compose
 
-As simple as:
-`docker-compose build`
-`docker-compose up`
+As simple as:  
+- `docker-compose build`  
+- `docker-compose up`  
