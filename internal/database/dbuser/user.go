@@ -18,7 +18,7 @@ type User struct {
 	UpdatedAt time.Time `bson:"updated_at"`
 }
 
-func (u *User) ToSevice() service.User {
+func (u *User) ToService() service.User {
 	return service.User{
 		ID:        u.ID,
 		Username:  u.Username,
@@ -27,7 +27,7 @@ func (u *User) ToSevice() service.User {
 		UpdatedAt: u.UpdatedAt,
 	}
 }
-func userFromSevice(u *service.User) User {
+func userFromService(u *service.User) User {
 	return User{
 		ID:        u.ID,
 		Username:  u.Username,
@@ -38,7 +38,7 @@ func userFromSevice(u *service.User) User {
 }
 
 func (d *Database) CreateUser(ctx context.Context, user *service.User) (string, error) {
-	_, err := d.userCollection.InsertOne(ctx, userFromSevice(user))
+	_, err := d.userCollection.InsertOne(ctx, userFromService(user))
 
 	if err != nil {
 		return "", fmt.Errorf("cannot insert user: %w", err)
@@ -77,7 +77,7 @@ func (d *Database) ListUsers(ctx context.Context, params *service.ListUsersParam
 			return nil, fmt.Errorf("cannot decode user: %w", err)
 		}
 
-		res = append(res, usr.ToSevice())
+		res = append(res, usr.ToService())
 	}
 
 	return res, nil
@@ -90,10 +90,10 @@ func (d *Database) GetUserByID(ctx context.Context, id string) (service.User, er
 		return service.User{}, fmt.Errorf("cannot find user: %w", err)
 	}
 
-	return usr.ToSevice(), nil
+	return usr.ToService(), nil
 }
 func (d *Database) UpdateUserByID(ctx context.Context, id string, user *service.User) (service.User, error) {
-	usr := userFromSevice(user)
+	usr := userFromService(user)
 
 	_, err := d.userCollection.UpdateOne(ctx, bson.M{"_id": id}, bson.M{"$set": usr})
 	if err != nil {
