@@ -18,32 +18,7 @@ There are 2 ideas:
 
 ## Package Diagram
 
-```plantuml
-
-@startuml
-
-skinparam component {
-    BackgroundColor White
-    BackgroundColor<<API>> SkyBlue
-    BackgroundColor<<STRORAGE>> LightGreen
-    BackgroundColor<<INFRA>> Pink
-    BackgroundColor<<LOGIC>> Lavender
-}
-
-[api] <<API>>
-[service] <<LOGIC>>
-[dbuser] <<STORAGE>>
-[logger] <<INFRA>>
-[main] <<API>>
-
-api --> service
-dbuser --> service
-main --> api
-api --> logger
-main --> logger
-
-@enduml
-```
+# <img src="www.plantuml.com/plantuml/png/TOxHQiCW543VxrVS7-WVbD2qR25Grf8KzX3su9AB5VKQZ1R6sBzFLraPPBvvxl5uTqiGFaHh01QjU1PUM1oTdHqJ1_m4J6SlHYszYpmTd74UNwygqDfakwtFRLLXhp_s9lwZz9VkrDNDK_AEIbv3uubuNMrVdhiwUMV5Ujqudfhsa4lYHZoHXo-0GSpg3SikC2paRsgaJ8eDm_GU4ywelvHbO31EoWpBlnbPeVYHWXJ6pQR2aeHxvW_ABtv0Sd_zU_anAtVO4K_Hccy0"/>
 
 ## Generate
 
