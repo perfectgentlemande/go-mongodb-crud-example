@@ -18,7 +18,7 @@ There are 2 ideas:
 
 ## Package Diagram
 
-# <img src="https://github.com/perfectgentlemande/go-mongodb-crud-example/blob/main/package-diagram.png?raw=true"/>
+<img src="https://github.com/perfectgentlemande/go-mongodb-crud-example/blob/main/package-diagram.png?raw=true"/>
 
 ## Generate
 
