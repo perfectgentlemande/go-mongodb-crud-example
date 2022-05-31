@@ -16,6 +16,35 @@ There are 2 ideas:
 - checking and glueing together technologies mentioned above;
 - sharing my own experience for the ones who want to glue the same technologies.
 
+## Package Diagram
+
+```plantuml
+
+@startuml
+
+skinparam component {
+    BackgroundColor White
+    BackgroundColor<<API>> SkyBlue
+    BackgroundColor<<STRORAGE>> LightGreen
+    BackgroundColor<<INFRA>> Pink
+    BackgroundColor<<LOGIC>> Lavender
+}
+
+[api] <<API>>
+[service] <<LOGIC>>
+[dbuser] <<STORAGE>>
+[logger] <<INFRA>>
+[main] <<API>>
+
+api --> service
+dbuser --> service
+main --> api
+api --> logger
+main --> logger
+
+@enduml
+```
+
 ## Generate
 
 API boilerplate code is generated using `oapi-codegen` tool from the `openapi.yaml` file.  
