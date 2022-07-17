@@ -48,7 +48,7 @@ Create network and volume:
 - `docker network create db_network`  
 - `docker volume create mongo-vol`  
 
-Run db container:  
+Run db container:
 - `docker run -it --rm -p 27017:27017 --name mongodb-0 --network db_network --mount source=mongo-vol,target=/data/db mongo:5.0.6`  
 After that you can run your using `go run` if you need.
 
