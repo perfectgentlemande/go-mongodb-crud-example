@@ -47,9 +47,10 @@ Get the image here:
 Create network and volume:   
 - `docker network create db_network`  
 - `docker volume create mongo-vol`  
+- `docker volume create mongo-config-vol`  
 
 Run db container:
-- `docker run -it --rm -p 27017:27017 --name mongodb-0 --network db_network --mount source=mongo-vol,target=/data/db mongo:5.0.6`  
+- `docker run -it --rm -p 27017:27017 --name mongodb-0 --network db_network --mount source=mongo-vol,target=/data/db --mount source=mongo-config-vol,target=/data/configdb mongo:5.0.6`  
 After that you can run your using `go run` if you need.
 
 Build the app image and run:  
