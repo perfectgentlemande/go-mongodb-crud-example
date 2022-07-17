@@ -6,6 +6,6 @@ dbuser:
   # uncomment this for go run .
   # connstr: "mongodb://localhost:27017"
   # uncomment this for docker
-  connstr: "mongodb://mongodb-0:27017"
+  # connstr: "mongodb://mongodb-0:27017"
   # uncomment this for docker
-  # connstr: "mongodb://mongodb:27017" 
+  connstr: "mongodb://mongodb:27017" 
