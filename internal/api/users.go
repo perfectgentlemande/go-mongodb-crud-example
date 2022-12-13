@@ -65,8 +65,6 @@ func (c *Controller) PostUser(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	log := logger.GetLogger(ctx)
 
-	log.Info("hello post")
-
 	var usr User
 	if err := json.NewDecoder(r.Body).Decode(&usr); err != nil {
 		log.Info("wrong user data", zap.Field{
